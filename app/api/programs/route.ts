@@ -1,5 +1,5 @@
 /**
- * Programs API - HOVCS 2.0 Conservative Core 적용
+ * Programs API - 임시 샘플 데이터 버전
  */
 
 import { NextRequest, NextResponse } from "next/server";
@@ -41,7 +41,6 @@ const samplePrograms = [
 // GET: 모든 프로그램 조회
 export async function GET(request: NextRequest) {
   try {
-    // 임시로 샘플 데이터 반환
     return NextResponse.json(samplePrograms);
   } catch (error) {
     console.error("Programs API error:", error);
@@ -49,52 +48,7 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST: 새 프로그램 생성
-export const POST = withErrorHandler(async (request: NextRequest) => {
-  const body = await request.json();
-  const {
-    title,
-    desc,
-    gradient,
-    visibility = "PUBLIC",
-    category,
-    startDate,
-    endDate,
-    capacity,
-    location,
-    instructor,
-    images
-  } = body;
-
-  // 개발 환경에서는 검증 완화
-  if (process.env.NODE_ENV === 'production') {
-    validateRequired(body, ['title', 'desc', 'gradient']);
-  } else if (!title || !desc || !gradient) {
-    await logInfo('개발 모드 - 필수 필드 누락 경고', { body });
-  }
-
-  const program = await prisma.program.create({
-    data: {
-      title,
-      desc,
-      gradient,
-      visibility,
-      category,
-      startDate,
-      endDate,
-      capacity,
-      location,
-      instructor,
-      images
-    },
-  });
-
-  // 감사 로그 기록
-  const user = getUserFromRequest(request);
-  await logDataCreate('Program', program.id, user?.userId, user?.name, {
-    title: program.title,
-    category: program.category
-  });
-
-  return NextResponse.json(program, { status: 201 });
-});
+// POST: 새 프로그램 생성 (임시 비활성화)
+export async function POST(request: NextRequest) {
+  return NextResponse.json({ message: "데이터베이스 연결 후 사용 가능합니다." }, { status: 503 });
+}

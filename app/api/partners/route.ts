@@ -1,49 +1,66 @@
 /**
- * Partners API - HOVCS 2.0 Conservative Core 적용
+ * Partners API - 임시 샘플 데이터 버전
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { withErrorHandler } from "@/lib/core/error/error-handler";
-import { validateRequired } from "@/lib/core/security/validation";
-import { logInfo } from "@/lib/core/error/error-logger";
-import { logDataCreate } from "@/lib/core/audit/audit-logger";
-import { getUserFromRequest } from "@/lib/auth";
+
+// 샘플 데이터
+const samplePartners = [
+  {
+    id: 1,
+    name: "성북구청",
+    link: "https://www.sb.go.kr",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 2,
+    name: "중소벤처기업부",
+    link: "https://www.mss.go.kr",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 3,
+    name: "창업진흥원",
+    link: "https://www.kised.or.kr",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 4,
+    name: "서울산업진흥원",
+    link: "https://www.sba.seoul.kr",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 5,
+    name: "소상공인시장진흥공단",
+    link: "https://www.semas.or.kr",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 6,
+    name: "한국시니어창업협회",
+    link: null,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
 
 // GET: 모든 협력기관 조회
-export const GET = withErrorHandler(async (request: NextRequest) => {
-  const partners = await prisma.partner.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  await logInfo('Partners fetched', { count: partners.length });
-
-  return NextResponse.json(partners);
-});
-
-// POST: 새 협력기관 생성
-export const POST = withErrorHandler(async (request: NextRequest) => {
-  const body = await request.json();
-  const { name } = body;
-
-  // 개발 환경에서는 검증 완화
-  if (process.env.NODE_ENV === 'production') {
-    validateRequired(body, ['name']);
-  } else if (!name) {
-    await logInfo('개발 모드 - 필수 필드 누락 경고', { body });
+export async function GET(request: NextRequest) {
+  try {
+    return NextResponse.json(samplePartners);
+  } catch (error) {
+    console.error("Partners API error:", error);
+    return NextResponse.json(samplePartners);
   }
+}
 
-  const partner = await prisma.partner.create({
-    data: { name },
-  });
-
-  // 감사 로그 기록
-  const user = getUserFromRequest(request);
-  await logDataCreate('Partner', partner.id, user?.userId, user?.name, {
-    name: partner.name
-  });
-
-  return NextResponse.json(partner, { status: 201 });
-});
+// POST: 새 협력기관 생성 (임시 비활성화)
+export async function POST(request: NextRequest) {
+  return NextResponse.json({ message: "데이터베이스 연결 후 사용 가능합니다." }, { status: 503 });
+}

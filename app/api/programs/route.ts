@@ -3,40 +3,51 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import { getUserFromRequest } from "@/lib/auth";
-import { canAccessContent, type Visibility, type UserRole } from "@/lib/permissions";
-import { withErrorHandler } from "@/lib/core/error/error-handler";
-import { validateRequired } from "@/lib/core/security/validation";
-import { logInfo } from "@/lib/core/error/error-logger";
-import { logDataCreate } from "@/lib/core/audit/audit-logger";
 
-// GET: 모든 프로그램 조회 (권한별 필터링)
-export const GET = withErrorHandler(async (request: NextRequest) => {
-  // 사용자 정보 가져오기 (로그인 안 되어 있으면 null)
-  const user = getUserFromRequest(request);
-  const userRole = user?.role as UserRole | null;
+// 샘플 데이터 (데이터베이스 연결 전 임시 사용)
+const samplePrograms = [
+  {
+    id: 1,
+    title: "창업 기초 교육",
+    desc: "중장년 창업을 위한 기초 교육 프로그램",
+    gradient: "from-blue-500 to-purple-600",
+    visibility: "PUBLIC",
+    category: "교육",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 2,
+    title: "멘토링 프로그램",
+    desc: "전문가와 함께하는 1:1 멘토링",
+    gradient: "from-green-500 to-teal-600",
+    visibility: "PUBLIC",
+    category: "멘토링",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 3,
+    title: "네트워킹 행사",
+    desc: "창업자 간 교류 및 네트워킹",
+    gradient: "from-orange-500 to-red-600",
+    visibility: "PUBLIC",
+    category: "네트워킹",
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
 
-  // 모든 프로그램 조회
-  const programs = await prisma.program.findMany({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  // 사용자 권한에 따라 필터링
-  const filteredPrograms = programs.filter(program => {
-    const visibility = program.visibility as Visibility;
-    return canAccessContent(userRole, visibility);
-  });
-
-  await logInfo('Programs fetched', {
-    count: filteredPrograms.length,
-    userRole: userRole || 'anonymous'
-  });
-
-  return NextResponse.json(filteredPrograms);
-});
+// GET: 모든 프로그램 조회
+export async function GET(request: NextRequest) {
+  try {
+    // 임시로 샘플 데이터 반환
+    return NextResponse.json(samplePrograms);
+  } catch (error) {
+    console.error("Programs API error:", error);
+    return NextResponse.json(samplePrograms);
+  }
+}
 
 // POST: 새 프로그램 생성
 export const POST = withErrorHandler(async (request: NextRequest) => {

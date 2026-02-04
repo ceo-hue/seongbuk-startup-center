@@ -1,0 +1,170 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Notice {
+  id          Int      @id @default(autoincrement())
+  title       String
+  content     String
+  category    String
+  author      String
+  views       Int      @default(0)
+  date        String
+  images      String?  // JSON array of image paths
+  files       String?  // JSON array of file paths
+  visibility  String   @default("PUBLIC")  // PUBLIC, MEMBER_ONLY, ADMIN_ONLY
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Company {
+  id            Int      @id @default(autoincrement())
+  name          String
+  tag           String
+  desc          String
+  detailedDesc  String?
+  year          String?
+  achievements  String?  // JSON string
+  website       String?
+  logo          String?  // Single logo image path
+  images        String?  // JSON array of additional image paths
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Program {
+  id          Int      @id @default(autoincrement())
+  title       String
+  desc        String
+  gradient    String
+  visibility  String   @default("PUBLIC")  // PUBLIC, MEMBER_ONLY, ADMIN_ONLY
+  category    String?                      // 카테고리 (멘토링, 교육, 네트워킹 등)
+  startDate   String?                      // 시작일
+  endDate     String?                      // 종료일
+  capacity    Int?                         // 정원
+  location    String?                      // 장소
+  instructor  String?                      // 강사/담당자
+  images      String?                      // 이미지 (JSON array)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Partner {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  link      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// UserRole: USER (일반 회원), RESIDENT_COMPANY (정회원-입주기업), GRADUATED_COMPANY (정회원-졸업기업), ADMIN (관리자)
+model User {
+  id              Int           @id @default(autoincrement())
+  email           String        @unique
+  password        String
+  name            String
+  role            String        @default("USER")
+  isVerified      Boolean       @default(false)
+
+  // 추가 회원 정보
+  phone           String?
+  company         String?                    // 소속 기업/기관
+  position        String?                    // 직책
+  businessNumber  String?       @unique      // 사업자등록번호
+
+  // 활동 추적
+  lastLoginAt     DateTime?
+  loginCount      Int           @default(0)
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  // 관계
+  applications      Application[]
+  participations    EventParticipation[]
+  comments          EventComment[]
+}
+
+// 프로그램 신청 관리
+model Application {
+  id            Int       @id @default(autoincrement())
+  userId        Int
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  programId     Int?                        // 신청한 프로그램 ID
+  programTitle  String                      // 프로그램 이름
+
+  status        String    @default("PENDING")  // PENDING, APPROVED, REJECTED
+  appliedAt     DateTime  @default(now())
+  reviewedAt    DateTime?
+  reviewedBy    String?                     // 승인/반려한 관리자
+  reviewNote    String?                     // 승인/반려 사유
+
+  // 신청서 추가 정보
+  message       String?                     // 신청 메시지
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+// 캘린더 일정 (정회원 전용)
+model CalendarEvent {
+  id            Int       @id @default(autoincrement())
+  title         String
+  description   String?
+  startDate     DateTime                     // 시작 일시
+  endDate       DateTime?                    // 종료 일시
+  location      String?                      // 장소
+  category      String?                      // 카테고리 (멘토링, 교육, 네트워킹 등)
+  maxParticipants Int?                       // 최대 참여 인원
+
+  createdBy     String                       // 생성자 (관리자 이름)
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  // 관계
+  participations EventParticipation[]
+  comments       EventComment[]
+}
+
+// 일정 참여 여부
+model EventParticipation {
+  id            Int       @id @default(autoincrement())
+  eventId       Int
+  event         CalendarEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  userId        Int
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  status        String    @default("PENDING")  // PENDING, ATTENDING, NOT_ATTENDING
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([eventId, userId])  // 한 사용자는 한 일정에 하나의 참여 상태만
+}
+
+// 일정 댓글
+model EventComment {
+  id            Int       @id @default(autoincrement())
+  eventId       Int
+  event         CalendarEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+
+  userId        Int
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  content       String
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}

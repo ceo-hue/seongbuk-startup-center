@@ -58,7 +58,7 @@ export function PartnersSection() {
       <motion.div
         className="grid grid-cols-2 gap-4 rounded-3xl border border-white/15 bg-white/5 p-6 backdrop-blur-xl md:grid-cols-3"
         initial="hidden"
-        whileInView="visible"
+        animate="visible"
         viewport={viewportOptions}
         variants={staggerContainer}
       >

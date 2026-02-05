@@ -127,7 +127,7 @@ export function CompaniesSection() {
         <motion.div
           className="grid grid-cols-1 gap-6 md:grid-cols-3"
           initial="hidden"
-          whileInView="visible"
+          animate="visible"
           viewport={viewportOptions}
           variants={staggerContainer}
           key={currentPage}

@@ -126,7 +126,7 @@ export function NoticesSection() {
         <motion.div
           className="space-y-3 rounded-3xl border border-white/15 bg-white/6 p-6 backdrop-blur-xl"
           initial="hidden"
-          whileInView="visible"
+          animate="visible"
           viewport={viewportOptions}
           variants={scaleIn}
           key={currentPage}

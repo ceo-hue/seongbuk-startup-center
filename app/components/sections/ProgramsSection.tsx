@@ -66,7 +66,7 @@ export function ProgramsSection() {
       <motion.div
         className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8 lg:grid-cols-10"
         initial="hidden"
-        whileInView="visible"
+        animate="visible"
         viewport={viewportOptions}
         variants={staggerContainer}
       >

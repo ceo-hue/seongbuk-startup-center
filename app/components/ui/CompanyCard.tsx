@@ -1,9 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 import type { Company } from "@/app/types";
-import { cardAnimation } from "@/app/utils/animations";
 
 type CompanyCardProps = Company & {
   onClick?: () => void;
@@ -11,10 +9,8 @@ type CompanyCardProps = Company & {
 
 export function CompanyCard({ name, tag, desc, logo, onClick }: CompanyCardProps) {
   return (
-    <motion.div
-      className="cursor-pointer rounded-3xl border border-white/18 bg-white/8 p-6 backdrop-blur-2xl shadow-[0_14px_40px_rgba(0,0,0,0.55)] transition-all hover:border-white/30"
-      variants={cardAnimation}
-      whileTap={{ scale: 0.98 }}
+    <div
+      className="cursor-pointer rounded-3xl border border-white/18 bg-white/8 p-6 backdrop-blur-2xl shadow-[0_14px_40px_rgba(0,0,0,0.55)] transition-all hover:border-white/30 active:scale-[0.98]"
       onClick={onClick}
     >
       <div className="flex items-start justify-between gap-3">
@@ -54,6 +50,6 @@ export function CompanyCard({ name, tag, desc, logo, onClick }: CompanyCardProps
           />
         </svg>
       </div>
-    </motion.div>
+    </div>
   );
 }

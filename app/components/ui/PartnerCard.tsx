@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
-import { cardAnimation } from "@/app/utils/animations";
 
 type PartnerCardProps = {
   name: string;
@@ -11,15 +9,10 @@ type PartnerCardProps = {
 
 export function PartnerCard({ name, link }: PartnerCardProps) {
   const content = (
-    <motion.div
-      className={`flex h-20 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-center text-xs font-medium text-gray-100/90 transition-colors md:text-sm ${
-        link ? "cursor-pointer hover:bg-white/20" : ""
+    <div
+      className={`flex h-20 items-center justify-center rounded-2xl border border-white/15 bg-white/10 text-center text-xs font-medium text-gray-100/90 transition-all md:text-sm ${
+        link ? "cursor-pointer hover:bg-white/20 hover:scale-105" : ""
       }`}
-      variants={cardAnimation}
-      whileHover={{
-        scale: 1.05,
-        transition: { duration: 0.2, ease: "easeOut" },
-      }}
     >
       <div className="flex items-center gap-1">
         {name}
@@ -29,7 +22,7 @@ export function PartnerCard({ name, link }: PartnerCardProps) {
           </svg>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 
   if (link) {

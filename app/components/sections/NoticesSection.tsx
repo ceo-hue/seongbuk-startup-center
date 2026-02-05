@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { NoticeItem } from "@/app/components/ui/NoticeItem";
 import { NoticeModal } from "@/app/components/ui/NoticeModal";
-import { fadeInUp, scaleIn, viewportOptions } from "@/app/utils/animations";
 import type { Notice } from "@/app/types";
 
 export function NoticesSection() {
@@ -88,12 +86,8 @@ export function NoticesSection() {
 
   return (
     <section id="notices" className="relative mx-auto mt-32 max-w-6xl px-6 md:px-10">
-      <motion.header
+      <header
         className="mb-10 pt-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewportOptions}
-        variants={fadeInUp}
       >
         <div>
           <h2 className="mt-2 text-2xl font-semibold md:text-3xl">
@@ -107,7 +101,7 @@ export function NoticesSection() {
           교육 모집, 입주 공고, 특강, 네트워크 행사 등 중장년 창업자에게 꼭 필요한 정보를 한눈에 확인할 수 있는
           공지 영역입니다.
         </p>
-      </motion.header>
+      </header>
 
       <div className="relative">
         {/* 이전 페이지 버튼 (위) */}
@@ -123,12 +117,8 @@ export function NoticesSection() {
           </button>
         )}
 
-        <motion.div
+        <div
           className="space-y-3 rounded-3xl border border-white/15 bg-white/6 p-6 backdrop-blur-xl"
-          initial="hidden"
-          animate="visible"
-          viewport={viewportOptions}
-          variants={scaleIn}
           key={currentPage}
         >
           {isLoading ? (
@@ -144,7 +134,7 @@ export function NoticesSection() {
               />
             ))
           )}
-        </motion.div>
+        </div>
 
         {/* 다음 페이지 버튼 (아래) */}
         {hasNextPage && !isLoading && notices.length > itemsPerPage && (

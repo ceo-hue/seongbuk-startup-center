@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { CompanyCard } from "@/app/components/ui/CompanyCard";
 import { CompanyModal } from "@/app/components/ui/CompanyModal";
-import { fadeInUp, staggerContainer, viewportOptions } from "@/app/utils/animations";
 import type { Company } from "@/app/types";
 
 export function CompaniesSection() {
@@ -89,12 +87,8 @@ export function CompaniesSection() {
 
   return (
     <section id="companies" className="relative mx-auto mt-32 max-w-6xl px-6 md:px-10">
-      <motion.header
+      <header
         className="mb-12 pt-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewportOptions}
-        variants={fadeInUp}
       >
         <div>
           <h2 className="mt-2 text-2xl font-semibold md:text-3xl">
@@ -108,7 +102,7 @@ export function CompaniesSection() {
           실제로 이 공간에서 시작해, 제품을 만들고, 고객을 만나고, 투자와 확장까지 이어간 기업들의 이야기는 앞으로
           도전할 중장년 창업자에게 가장 강력한 설득 자료가 됩니다.
         </p>
-      </motion.header>
+      </header>
 
       <div className="relative">
         {/* 이전 페이지 버튼 */}
@@ -124,12 +118,8 @@ export function CompaniesSection() {
           </button>
         )}
 
-        <motion.div
+        <div
           className="grid grid-cols-1 gap-6 md:grid-cols-3"
-          initial="hidden"
-          animate="visible"
-          viewport={viewportOptions}
-          variants={staggerContainer}
           key={currentPage}
         >
           {isLoading ? (
@@ -145,7 +135,7 @@ export function CompaniesSection() {
               />
             ))
           )}
-        </motion.div>
+        </div>
 
         {/* 다음 페이지 버튼 */}
         {hasNextPage && !isLoading && residentCompanies.length > itemsPerPage && (

@@ -1,9 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { PartnerCard } from "@/app/components/ui/PartnerCard";
-import { fadeInUp, staggerContainer, viewportOptions } from "@/app/utils/animations";
 import type { Partner } from "@/app/types";
 
 export function PartnersSection() {
@@ -34,12 +32,8 @@ export function PartnersSection() {
 
   return (
     <section id="partners" className="relative mx-auto mt-32 max-w-6xl px-6 md:px-10">
-      <motion.header
+      <header
         className="mb-10 pt-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
-        initial="hidden"
-        whileInView="visible"
-        viewport={viewportOptions}
-        variants={fadeInUp}
       >
         <div>
           <h2 className="mt-2 text-2xl font-semibold md:text-3xl">
@@ -53,14 +47,10 @@ export function PartnersSection() {
           센터와 협력하는 주요 기관의 로고를 통해, 창업자가 어떤 공공·민간 네트워크와 함께 성장하게 되는지
           직관적으로 보여줍니다.
         </p>
-      </motion.header>
+      </header>
 
-      <motion.div
+      <div
         className="grid grid-cols-2 gap-4 rounded-3xl border border-white/15 bg-white/5 p-6 backdrop-blur-xl md:grid-cols-3"
-        initial="hidden"
-        animate="visible"
-        viewport={viewportOptions}
-        variants={staggerContainer}
       >
         {isLoading ? (
           <div className="col-span-full py-8 text-center text-gray-400">로딩 중...</div>
@@ -75,7 +65,7 @@ export function PartnersSection() {
             />
           ))
         )}
-      </motion.div>
+      </div>
     </section>
   );
 }

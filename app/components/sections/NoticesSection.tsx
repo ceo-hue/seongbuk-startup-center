@@ -23,8 +23,14 @@ export function NoticesSection() {
   const fetchNotices = async () => {
     try {
       const res = await fetch("/api/notices");
+      if (!res.ok) {
+        console.error("API Error:", res.status, res.statusText);
+        return;
+      }
       const data = await res.json();
-      setNotices(data);
+      if (Array.isArray(data)) {
+        setNotices(data);
+      }
     } catch (error) {
       console.error("Failed to fetch notices:", error);
     } finally {

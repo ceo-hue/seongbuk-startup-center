@@ -17,8 +17,14 @@ export function PartnersSection() {
   const fetchPartners = async () => {
     try {
       const res = await fetch("/api/partners");
+      if (!res.ok) {
+        console.error("API Error:", res.status, res.statusText);
+        return;
+      }
       const data = await res.json();
-      setPartners(data);
+      if (Array.isArray(data)) {
+        setPartners(data);
+      }
     } catch (error) {
       console.error("Failed to fetch partners:", error);
     } finally {

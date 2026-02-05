@@ -17,8 +17,22 @@ export function ProgramsSection() {
   const fetchPrograms = async () => {
     try {
       const res = await fetch("/api/programs");
+
+      if (!res.ok) {
+        console.error("API Error:", res.status, res.statusText);
+        const errorText = await res.text();
+        console.error("Error details:", errorText);
+        return;
+      }
+
       const data = await res.json();
-      setProgramCards(data);
+      console.log("Fetched programs:", data.length);
+
+      if (Array.isArray(data)) {
+        setProgramCards(data);
+      } else {
+        console.error("Invalid data format:", data);
+      }
     } catch (error) {
       console.error("Failed to fetch programs:", error);
     } finally {

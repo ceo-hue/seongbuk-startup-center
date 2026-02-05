@@ -23,8 +23,14 @@ export function CompaniesSection() {
   const fetchCompanies = async () => {
     try {
       const res = await fetch("/api/companies");
+      if (!res.ok) {
+        console.error("API Error:", res.status, res.statusText);
+        return;
+      }
       const data = await res.json();
-      setResidentCompanies(data);
+      if (Array.isArray(data)) {
+        setResidentCompanies(data);
+      }
     } catch (error) {
       console.error("Failed to fetch companies:", error);
     } finally {

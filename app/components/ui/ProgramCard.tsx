@@ -8,10 +8,13 @@ import { cardAnimation } from "@/app/utils/animations";
 type ProgramCardProps = ProgramCardType;
 
 export function ProgramCard({ title, desc, gradient }: ProgramCardProps) {
+  console.log('🎨 Rendering ProgramCard:', title);
+
   return (
     <motion.div
-      className="relative col-span-1 flex flex-col justify-between overflow-hidden rounded-3xl border border-white/18 bg-white/10 p-7 md:p-8 lg:col-span-5 lg:p-9 backdrop-blur-2xl shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
+      className="relative col-span-1 flex flex-col justify-between overflow-hidden rounded-3xl border-4 border-yellow-400 bg-white/10 p-7 md:p-8 lg:col-span-5 lg:p-9 backdrop-blur-2xl shadow-[0_18px_50px_rgba(0,0,0,0.55)]"
       variants={cardAnimation}
+      style={{ minHeight: '250px', outline: '3px solid red' }}
       whileHover={{
         scale: 1.02,
         transition: { duration: 0.3, ease: "easeOut" },

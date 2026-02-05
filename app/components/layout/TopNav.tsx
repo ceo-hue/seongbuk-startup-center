@@ -10,7 +10,9 @@ export function TopNav() {
   const [userName, setUserName] = useState("");
   const [userRole, setUserRole] = useState("");
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const menuRef = useRef<HTMLLIElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -31,6 +33,9 @@ export function TopNav() {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setShowUserMenu(false);
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setShowMobileMenu(false);
       }
     }
 
@@ -54,6 +59,7 @@ export function TopNav() {
   };
 
   const scrollToSection = (sectionId: string) => {
+    setShowMobileMenu(false); // 모바일 메뉴 닫기
     const element = document.getElementById(sectionId);
     if (element) {
       const offset = 80; // 네비게이션 바 높이
@@ -69,14 +75,17 @@ export function TopNav() {
 
   return (
     <div className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-[#050609]/40 backdrop-blur-xl">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4 text-sm text-gray-200">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 text-sm text-gray-200 md:px-6 md:py-4">
+        {/* 로고/센터명 */}
         <div
-          className="font-semibold tracking-tight text-white/90 cursor-pointer"
+          className="flex-shrink-0 cursor-pointer text-sm font-semibold tracking-tight text-white/90 md:text-base"
           onClick={() => scrollToSection("hero")}
         >
           성북구 중장년 기술창업센터
         </div>
-        <ul className="flex items-center gap-6">
+
+        {/* 데스크톱 메뉴 */}
+        <ul className="hidden items-center gap-6 md:flex">
           <li
             className="cursor-pointer transition-colors hover:text-white"
             onClick={() => scrollToSection("hero")}
@@ -255,7 +264,134 @@ export function TopNav() {
             </li>
           )}
         </ul>
+
+        {/* 모바일 햄버거 버튼 + 로그인 */}
+        <div className="flex items-center gap-3 md:hidden">
+          {/* 로그인 버튼 (모바일) */}
+          {!mounted ? (
+            <button
+              className="rounded-full border border-white/30 bg-white/10 px-3 py-1.5 text-xs font-medium text-white"
+              disabled
+            >
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            </button>
+          ) : isLoggedIn ? (
+            <button
+              onClick={() => setShowUserMenu(!showUserMenu)}
+              className="flex items-center gap-1 rounded-full border border-white/30 bg-white/10 px-3 py-1.5 text-xs font-medium text-white"
+            >
+              <svg className="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+            </button>
+          ) : (
+            <button
+              onClick={() => router.push("/login")}
+              className="rounded-full border border-white/30 bg-white/10 px-3 py-1.5 text-xs font-medium text-white"
+            >
+              로그인
+            </button>
+          )}
+
+          {/* 햄버거 버튼 */}
+          <button
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/30 bg-white/10 text-white transition-colors hover:bg-white/20"
+            aria-label="메뉴"
+          >
+            <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {showMobileMenu ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
       </nav>
+
+      {/* 모바일 메뉴 드롭다운 */}
+      {showMobileMenu && (
+        <div
+          ref={mobileMenuRef}
+          className="border-t border-white/10 bg-[#050609]/95 backdrop-blur-xl md:hidden"
+        >
+          <ul className="mx-auto max-w-6xl space-y-1 px-4 py-3">
+            <li
+              className="cursor-pointer rounded-lg px-4 py-3 transition-colors hover:bg-white/10"
+              onClick={() => scrollToSection("hero")}
+            >
+              센터소개
+            </li>
+            <li
+              className="cursor-pointer rounded-lg px-4 py-3 transition-colors hover:bg-white/10"
+              onClick={() => scrollToSection("programs")}
+            >
+              지원 프로그램
+            </li>
+            <li
+              className="cursor-pointer rounded-lg px-4 py-3 transition-colors hover:bg-white/10"
+              onClick={() => scrollToSection("companies")}
+            >
+              입주·졸업기업 소개
+            </li>
+            <li
+              className="cursor-pointer rounded-lg px-4 py-3 transition-colors hover:bg-white/10"
+              onClick={() => scrollToSection("notices")}
+            >
+              공지글
+            </li>
+            <li
+              className="cursor-pointer rounded-lg px-4 py-3 transition-colors hover:bg-white/10"
+              onClick={() => scrollToSection("partners")}
+            >
+              창업지원 기관
+            </li>
+            <li
+              className="cursor-pointer rounded-lg px-4 py-3 transition-colors hover:bg-white/10"
+              onClick={() => scrollToSection("contact")}
+            >
+              문의하기
+            </li>
+
+            {/* 로그인된 경우 모바일 메뉴에 추가 옵션 */}
+            {isLoggedIn && (
+              <>
+                <div className="my-2 border-t border-white/10"></div>
+                <li
+                  className="cursor-pointer rounded-lg px-4 py-3 transition-colors hover:bg-white/10"
+                  onClick={() => {
+                    router.push("/mypage");
+                    setShowMobileMenu(false);
+                  }}
+                >
+                  마이페이지
+                </li>
+                {userRole === "ADMIN" && (
+                  <li
+                    className="cursor-pointer rounded-lg px-4 py-3 transition-colors hover:bg-white/10"
+                    onClick={() => {
+                      router.push("/admin");
+                      setShowMobileMenu(false);
+                    }}
+                  >
+                    관리자 페이지
+                  </li>
+                )}
+                <li
+                  className="cursor-pointer rounded-lg px-4 py-3 text-red-400 transition-colors hover:bg-red-500/10"
+                  onClick={() => {
+                    handleLogout();
+                    setShowMobileMenu(false);
+                  }}
+                >
+                  로그아웃
+                </li>
+              </>
+            )}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
